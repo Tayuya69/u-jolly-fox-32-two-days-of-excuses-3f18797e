@@ -21,3 +21,14 @@ if (written.includes("\n")) {
   throw new Error("entry.txt must be a single line with no trailing newline");
 }
 console.log("verification passed: entry.txt is exactly the 100-character entry line");
+
+// Post-write read-back verification: re-read /output/entry.txt and assert it is exactly the entry line.
+import { readFileSync } from "node:fs";
+const __expectedEntry = "I was 100% confident the deadline was Friday. It was Tuesday. My confidence has filed for a recount.";
+const __actualEntry = readFileSync("/output/entry.txt", "utf8");
+if (__actualEntry !== __expectedEntry) {
+  throw new Error(`entry mismatch: got ${JSON.stringify(__actualEntry)}`);
+}
+if (__actualEntry.length !== 100 || __actualEntry.includes("\n")) {
+  throw new Error(`entry length/newline check failed: length=${__actualEntry.length}`);
+}
